@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบคำนวณต้นทุนอาหาร - จุ๊กอู๋</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <style>
+        body { font-family: 'Prompt', sans-serif; background-color: #f3f4f6; }
+        /* ซ่อน input type number arrow */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Header Section -->
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-sm border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- โลโก้: ใช้สีน้ำเงินหลัก -->
+                <a href="index.html" class="text-2xl font-black tracking-tighter text-[#0d61b9] flex items-center gap-2">
+                    <span class="w-3 h-3 bg-[#8aff00] rounded-full inline-block"></span>
+                    จุ๊กอู๋
+                </a>
+                
+                <!-- เมนูนำทาง -->
+                <nav class="hidden md:flex space-x-6">
+                    <!-- <a href="#" class="text-gray-600 hover:text-[#0d61b9] px-3 py-2 text-sm font-medium transition duration-150 border-b-2 border-transparent hover:border-[#8aff00]">จุ๊กอู๋เป็นใคร</a> -->
+                    <a href="recipe.html" class="text-gray-600 hover:text-[#0d61b9] px-3 py-2 text-sm font-medium transition duration-150 border-b-2 border-transparent hover:border-[#8aff00]">จุ๊กอู๋ทำอะไรได้บ้าง</a>
+                    <a href="#" class="text-gray-600 hover:text-[#0d61b9] px-3 py-2 text-sm font-medium transition duration-150 border-b-2 border-transparent hover:border-[#8aff00]">จุ๊กอู๋ชอบเขียน</a>
+                    <a href="#" class="px-4 py-2 text-sm font-medium text-white bg-[#0d61b9] rounded-md hover:bg-[#8aff00] hover:text-[#0d61b9] transition duration-300">สนับสนุนจุ๊กอู๋</a>
+                </nav>
+
+                <!-- ปุ่มเมนูมือถือ -->
+                <button id="menu-button" class="md:hidden p-2 rounded-md text-[#0d61b9] hover:bg-gray-50 focus:outline-none">
+                    <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden border-t border-gray-100 bg-white shadow-lg absolute w-full left-0 z-40">
+            <div class="pt-2 pb-3 space-y-1 px-4">
+                <!-- <a href="#" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-[#0d61b9] hover:bg-gray-50 rounded-md">จุ๊กอู๋เป็นใคร</a> -->
+                <a href="#" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-[#0d61b9] hover:bg-gray-50 rounded-md">จุ๊กอู๋ทำอะไรได้บ้าง</a>
+                <a href="#" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-[#0d61b9] hover:bg-gray-50 rounded-md">จุ๊กอู๋ชอบเขียน</a>
+                <a href="#" class="block px-3 py-2 text-base font-medium text-[#0d61b9] font-bold">ติดต่อ</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow p-4 md:p-8 flex flex-col items-center">
+        <div class="max-w-6xl w-full mx-auto mt-4">
+            
+            <!-- Intro Text -->
+            <div class="mb-6 text-center md:text-left">
+                <h1 class="text-3xl font-bold text-gray-800">เครื่องมือคำนวณต้นทุนอาหาร</h1>
+                <p class="text-gray-500">Recipe Costing Calculator with Yield %</p>
+            </div>
+
+            <!-- Main Card Container -->
+            <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+                
+                <!-- แถบสีด้านบนใน Card -->
+                <div class="h-2 w-full bg-gradient-to-r from-[#0d61b9] to-[#8aff00]"></div>
+
+                <div class="p-6 md:p-8">
+                    
+                    <!-- Input Form Section -->
+                    <div class="bg-gray-50 rounded-xl p-6 border border-gray-200 mb-8">
+                        <h2 class="text-lg font-semibold text-gray-700 mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-plus-circle text-[#0d61b9]"></i> เพิ่มรายการวัตถุดิบ
+                        </h2>
+                        
+                        <form id="costForm" class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+                            
+                            <!-- 1. ชื่อวัตถุดิบ -->
+                            <div class="md:col-span-3">
+                                <label class="block text-sm font-medium text-gray-600 mb-1">ชื่อวัตถุดิบ</label>
+                                <input type="text" id="itemName" placeholder="เช่น เนื้อปู, มะนาว" required
+                                    class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#0d61b9] focus:border-transparent outline-none transition-all">
+                            </div>
+
+                            <!-- 2. ข้อมูลการซื้อ -->
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-600 mb-1">ราคาที่ซื้อ (บาท)</label>
+                                <input type="number" id="buyPrice" placeholder="0.00" step="0.01" required
+                                    class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#0d61b9] outline-none">
+                            </div>
+                            
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-600 mb-1">ปริมาณที่ซื้อ</label>
+                                <div class="flex">
+                                    <input type="number" id="buyQty" placeholder="1" step="0.01" required
+                                        class="w-full px-4 py-2 rounded-l-lg border border-gray-300 border-r-0 focus:ring-2 focus:ring-[#0d61b9] outline-none">
+                                    <select id="buyUnit" class="bg-gray-100 px-2 py-2 rounded-r-lg border border-gray-300 text-sm focus:outline-none cursor-pointer hover:bg-gray-200 transition-colors" onchange="updateUsageUnits()">
+                                        <optgroup label="น้ำหนัก">
+                                            <option value="kg">กก.</option>
+                                            <option value="g">กรัม</option>
+                                            <option value="kheed">ขีด</option>
+                                        </optgroup>
+                                        <optgroup label="ปริมาตร">
+                                            <option value="l">ลิตร</option>
+                                            <option value="ml">มล.</option>
+                                        </optgroup>
+                                        <optgroup label="จำนวน">
+                                            <option value="pcs">ชิ้น/ฟอง</option>
+                                        </optgroup>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- 3. Yield -->
+                            <div class="md:col-span-1">
+                                <label class="block text-sm font-medium text-gray-600 mb-1 text-center">Yield %</label>
+                                <div class="relative">
+                                    <input type="number" id="yieldPercent" value="100" max="100" min="1" required
+                                        class="w-full px-2 py-2 text-center rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#8aff00] outline-none bg-yellow-50 font-bold text-gray-700">
+                                    <div class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none group-hover:opacity-100">
+                                        % เนื้อที่ใช้ได้จริง
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 4. ข้อมูลการใช้ -->
+                            <div class="md:col-span-3">
+                                <label class="block text-sm font-medium text-gray-600 mb-1">ปริมาณที่ใช้ในสูตร</label>
+                                <div class="flex">
+                                    <input type="number" id="usageQty" placeholder="0" step="0.01" required
+                                        class="w-full px-4 py-2 rounded-l-lg border border-gray-300 border-r-0 focus:ring-2 focus:ring-[#0d61b9] outline-none">
+                                    <select id="usageUnit" class="bg-gray-100 px-2 py-2 rounded-r-lg border border-gray-300 text-sm focus:outline-none cursor-pointer hover:bg-gray-200 transition-colors">
+                                        <!-- ตัวเลือกจะเปลี่ยนตาม Unit ที่ซื้อ -->
+                                        <option value="g">กรัม</option>
+                                        <option value="kg">กก.</option>
+                                        <option value="kheed">ขีด</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- ปุ่มเพิ่ม -->
+                            <div class="md:col-span-1">
+                                <button type="submit" class="w-full h-[42px] bg-[#0d61b9] hover:bg-[#094b91] text-white rounded-lg shadow-md transition-all flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-calculator"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Table Result Section -->
+                    <div class="overflow-x-auto rounded-lg border border-gray-200">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-gray-50 text-gray-600 text-sm uppercase tracking-wider">
+                                    <th class="p-4 font-semibold border-b">รายการ</th>
+                                    <th class="p-4 font-semibold border-b text-center">ซื้อมา (ราคา/หน่วย)</th>
+                                    <th class="p-4 font-semibold border-b text-center text-orange-600">Yield %</th>
+                                    <th class="p-4 font-semibold border-b text-right text-blue-700">ต้นทุนจริง / หน่วย</th>
+                                    <th class="p-4 font-semibold border-b text-center">ปริมาณที่ใช้</th>
+                                    <th class="p-4 font-semibold border-b text-right bg-green-50 text-green-700">ต้นทุนต่อจาน</th>
+                                    <th class="p-4 font-semibold border-b text-center">ลบ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="costTableBody" class="text-gray-700 text-sm divide-y divide-gray-100">
+                                <!-- Rows will be added here -->
+                                <tr id="emptyRow">
+                                    <td colspan="7" class="p-8 text-center text-gray-400 italic">
+                                        ยังไม่มีรายการวัตถุดิบ กรุณากรอกข้อมูลด้านบน
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot id="tableFooter" class="hidden">
+                                <tr class="bg-gray-50 font-bold text-gray-800">
+                                    <td colspan="5" class="p-4 text-right text-lg">รวมต้นทุนทั้งหมด (Total Cost)</td>
+                                    <td class="p-4 text-right text-xl text-[#0d61b9]" id="grandTotal">0.00</td>
+                                    <td class="p-4 text-right">บาท</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                    <!-- Helper info -->
+                    <div class="mt-6 flex flex-wrap gap-4 text-xs text-gray-500 bg-blue-50 p-4 rounded-lg border border-blue-100">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-circle-info text-blue-500"></i>
+                            <span><strong>Yield %:</strong> ใส่ 100 สำหรับเครื่องปรุง/ของแห้ง, ใส่ 50-80 สำหรับผัก/เนื้อสัตว์ที่ต้องตัดแต่ง</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-scale-balanced text-blue-500"></i>
+                            <span><strong>Logic:</strong> (ราคาซื้อ ÷ (ปริมาณซื้อ × Yield%)) × ปริมาณใช้ = ต้นทุน</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // --- Mobile Menu Toggle ---
+        const menuButton = document.getElementById('menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        menuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // --- 1. Unit Definitions & Conversion Logic ---
+        const units = {
+            weight: {
+                base: 'g', // Gram is base
+                options: [
+                    { val: 'kg', label: 'กก.', factor: 1000 },
+                    { val: 'g', label: 'กรัม', factor: 1 },
+                    { val: 'kheed', label: 'ขีด', factor: 100 }
+                ]
+            },
+            volume: {
+                base: 'ml', // ML is base
+                options: [
+                    { val: 'l', label: 'ลิตร', factor: 1000 },
+                    { val: 'ml', label: 'มล.', factor: 1 },
+                    { val: 'tbsp', label: 'ช้อนโต๊ะ', factor: 15 }, // Est.
+                    { val: 'tsp', label: 'ช้อนชา', factor: 5 }      // Est.
+                ]
+            },
+            count: {
+                base: 'pcs',
+                options: [
+                    { val: 'pcs', label: 'ชิ้น/ฟอง', factor: 1 }
+                ]
+            }
+        };
+
+        const buyUnitSelect = document.getElementById('buyUnit');
+        const usageUnitSelect = document.getElementById('usageUnit');
+        const costTableBody = document.getElementById('costTableBody');
+        const emptyRow = document.getElementById('emptyRow');
+        const tableFooter = document.getElementById('tableFooter');
+        const grandTotalEl = document.getElementById('grandTotal');
+        
+        let totalCost = 0;
+
+        // --- 2. Dynamic Unit Selector ---
+        function updateUsageUnits() {
+            const selectedBuyUnit = buyUnitSelect.value;
+            let unitType = 'weight';
+
+            // Detect Type
+            if (['l', 'ml'].includes(selectedBuyUnit)) unitType = 'volume';
+            else if (selectedBuyUnit === 'pcs') unitType = 'count';
+
+            // Generate Options
+            usageUnitSelect.innerHTML = '';
+            units[unitType].options.forEach(opt => {
+                const option = document.createElement('option');
+                option.value = opt.val;
+                option.text = opt.label;
+                usageUnitSelect.appendChild(option);
+            });
+            
+            // Auto select base unit (g, ml, pcs) for usage as default
+            usageUnitSelect.value = units[unitType].base;
+        }
+
+        // Initialize units on load
+        updateUsageUnits();
+
+
+        // --- 3. Calculation Logic ---
+        document.getElementById('costForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Get Values
+            const name = document.getElementById('itemName').value;
+            const price = parseFloat(document.getElementById('buyPrice').value);
+            const buyQty = parseFloat(document.getElementById('buyQty').value);
+            const buyUnit = document.getElementById('buyUnit').value;
+            const yieldPct = parseFloat(document.getElementById('yieldPercent').value) / 100;
+            const useQty = parseFloat(document.getElementById('usageQty').value);
+            const useUnit = document.getElementById('usageUnit').value;
+
+            // Find Factors
+            let type = 'weight';
+            if(['l','ml'].includes(buyUnit)) type = 'volume';
+            else if(buyUnit === 'pcs') type = 'count';
+
+            const buyFactor = units[type].options.find(u => u.val === buyUnit).factor;
+            const useFactor = units[type].options.find(u => u.val === useUnit).factor;
+            const baseUnitLabel = units[type].base;
+
+            // --- THE CORE FORMULA ---
+            // 1. Convert Buying to Base (e.g. kg -> g)
+            const totalBaseQtyBought = buyQty * buyFactor;
+            
+            // 2. Apply Yield (Real Usable Quantity)
+            const usableBaseQty = totalBaseQtyBought * yieldPct;
+
+            // 3. Find True Cost per Base Unit
+            const trueCostPerBase = price / usableBaseQty;
+
+            // 4. Convert Usage to Base
+            const totalBaseQtyUsed = useQty * useFactor;
+
+            // 5. Final Calculation
+            const finalRowCost = trueCostPerBase * totalBaseQtyUsed;
+
+            // --- Render Table ---
+            addRoleToTable(name, buyQty, buyUnit, price, yieldPct, trueCostPerBase, baseUnitLabel, useQty, useUnit, finalRowCost);
+            
+            // Clear Form inputs but keep yield at 100
+            document.getElementById('itemName').value = '';
+            document.getElementById('buyPrice').value = '';
+            document.getElementById('usageQty').value = '';
+            document.getElementById('itemName').focus();
+        });
+
+        function addRoleToTable(name, buyQty, buyUnit, price, yieldPct, trueCostPerBase, baseUnitLabel, useQty, useUnit, finalRowCost) {
+            // Remove empty row text
+            if(emptyRow) emptyRow.style.display = 'none';
+            tableFooter.classList.remove('hidden');
+
+            const tr = document.createElement('tr');
+            tr.className = "hover:bg-gray-50 transition-colors group";
+
+            // Format numbers
+            const yieldDisplay = Math.round(yieldPct * 100);
+            const yieldClass = yieldDisplay < 100 ? "text-orange-600 font-bold bg-orange-50 px-2 py-1 rounded" : "text-gray-500";
+            
+            // For displaying true cost clearly, if it's very small, show more decimals
+            const costPerBaseDisplay = trueCostPerBase < 1 ? trueCostPerBase.toFixed(4) : trueCostPerBase.toFixed(2);
+
+            tr.innerHTML = `
+                <td class="p-4 font-medium text-gray-800">${name}</td>
+                <td class="p-4 text-center text-gray-500">
+                    <div class="text-xs">ซื้อ ${buyQty} ${buyUnit}</div>
+                    <div class="text-gray-800 font-semibold">${price.toLocaleString()} บ.</div>
+                </td>
+                <td class="p-4 text-center">
+                    <span class="${yieldClass}">${yieldDisplay}%</span>
+                </td>
+                <td class="p-4 text-right font-mono text-blue-600">
+                    ${costPerBaseDisplay} <span class="text-xs text-gray-400">/${baseUnitLabel}</span>
+                </td>
+                <td class="p-4 text-center text-gray-700">
+                    ${useQty} ${useUnit}
+                </td>
+                <td class="p-4 text-right font-bold text-green-700 text-lg">
+                    ${finalRowCost.toFixed(2)}
+                </td>
+                <td class="p-4 text-center">
+                    <button onclick="deleteRow(this, ${finalRowCost})" class="text-gray-300 hover:text-red-500 transition-colors">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </td>
+            `;
+
+            costTableBody.appendChild(tr);
+
+            // Update Total
+            updateTotal(finalRowCost);
+        }
+
+        function deleteRow(btn, cost) {
+            const row = btn.closest('tr');
+            row.remove();
+            updateTotal(-cost);
+            
+            // Check if table empty
+            if(costTableBody.querySelectorAll('tr').length <= 1) { // 1 because emptyRow is hidden
+                 if(emptyRow) emptyRow.style.display = 'table-row';
+                 tableFooter.classList.add('hidden');
+            }
+        }
+
+        function updateTotal(amount) {
+            totalCost += amount;
+            // Prevent floating point errors (e.g. -0.0000001)
+            if (Math.abs(totalCost) < 0.01) totalCost = 0;
+            grandTotalEl.innerText = totalCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+    </script>
+</body>
+</html>

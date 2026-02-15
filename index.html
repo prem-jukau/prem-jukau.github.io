@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>จุ๊กอู๋</title>
+    <!-- โหลด Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* กำหนดฟอนต์หลัก */
+        body {
+            font-family: 'prompt', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+            background-color: #ffffff;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        /* Custom Colors Classes สำหรับการนำไปใช้ซ้ำ */
+        .text-primary-blue { color: #0d61b9; }
+        .bg-primary-blue { background-color: #0d61b9; }
+        .border-primary-blue { border-color: #0d61b9; }
+        
+        .text-accent-green { color: #8aff00; }
+        .bg-accent-green { background-color: #8aff00; }
+        .border-accent-green { border-color: #8aff00; }
+
+        /* สไตล์ปุ่มหลัก */
+        .btn-primary {
+            background-color: #0d61b9;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #8aff00;
+            color: #0d61b9; /* เปลี่ยนตัวหนังสือเป็นสีน้ำเงินเมื่อโฮเวอร์บนพื้นเขียว */
+            font-weight: bold;
+            box-shadow: 0 0 15px rgba(138, 255, 0, 0.5); /* เพิ่ม Glow effect */
+        }
+
+        /* สไตล์ปุ่มรอง */
+        .btn-secondary {
+            border: 2px solid #0d61b9;
+            color: #0d61b9;
+            background-color: transparent;
+            transition: all 0.3s ease;
+        }
+        .btn-secondary:hover {
+            background-color: #0d61b9;
+            color: white;
+        }
+
+        /* การ์ดโฮเวอร์ */
+        .card-hover:hover {
+            border-color: #8aff00;
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px -5px rgba(13, 97, 185, 0.1), 0 8px 10px -6px rgba(13, 97, 185, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. ส่วนหัว (Header) -->
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-sm border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- โลโก้: ใช้สีน้ำเงินหลัก -->
+                <a href="index.html" class="text-2xl font-black tracking-tighter text-[#0d61b9] flex items-center gap-2">
+                    <span class="w-3 h-3 bg-[#8aff00] rounded-full inline-block"></span>
+                    จุ๊กอู๋
+                </a>
+                
+                <!-- เมนูนำทาง -->
+                <nav class="hidden md:flex space-x-6">
+                    <!-- <a href="#" class="text-gray-600 hover:text-[#0d61b9] px-3 py-2 text-sm font-medium transition duration-150 border-b-2 border-transparent hover:border-[#8aff00]">จุ๊กอู๋เป็นใคร</a> -->
+                    <a href="recipe.html" class="text-gray-600 hover:text-[#0d61b9] px-3 py-2 text-sm font-medium transition duration-150 border-b-2 border-transparent hover:border-[#8aff00]">จุ๊กอู๋ทำอะไรได้บ้าง</a>
+                    <a href="#" class="text-gray-600 hover:text-[#0d61b9] px-3 py-2 text-sm font-medium transition duration-150 border-b-2 border-transparent hover:border-[#8aff00]">จุ๊กอู๋แจกสูตรอาหาร</a>
+                    <a href="#" class="px-4 py-2 text-sm font-medium text-white bg-[#0d61b9] rounded-md hover:bg-[#8aff00] hover:text-[#0d61b9] transition duration-300">สนับสนุนจุ๊กอู๋</a>
+                </nav>
+
+                <!-- ปุ่มเมนูมือถือ -->
+                <button id="menu-button" class="md:hidden p-2 rounded-md text-[#0d61b9] hover:bg-gray-50">
+                    <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden border-t border-gray-100 bg-white">
+            <div class="pt-2 pb-3 space-y-1 px-4">
+                <!-- <a href="#" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-[#0d61b9] hover:bg-gray-50 rounded-md">จุ๊กอู๋เป็นใคร</a> -->
+                <a href="recipe.html" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-[#0d61b9] hover:bg-gray-50 rounded-md">จุ๊กอู๋ทำอะไรได้บ้าง</a>
+                <a href="#" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-[#0d61b9] hover:bg-gray-50 rounded-md">จุ๊กอู๋แจกสูตรอาหาร</a>
+                <a href="#" class="block px-3 py-2 text-base font-medium text-[#0d61b9] font-bold">ติดต่อ</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 2. ส่วนเนื้อหาหลัก -->
+    <main>
+        
+        <!-- 2.1. Hero Section -->
+        <section class="py-20 lg:py-32 bg-gradient-to-b from-blue-50/30 to-white relative overflow-hidden">
+            <!-- Decorative Element (วงกลมสีเขียวจางๆ ด้านหลัง) -->
+            <div class="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-[#8aff00] rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+            <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-96 h-96 bg-[#0d61b9] rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-2000"></div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+                
+                <h1 class="text-5xl md:text-7xl font-black text-[#0d61b9]">
+                    <div>จุ๊กอู๋ลูกแม่ค้า</div>
+                </h1> <br>
+                    <p class="mt-4 text-xl text-gray-600 max-w-2x2 mx-auto font-light">
+                    ที่จะช่วยพ่อค้าแม่ขายคิดคำนวณต้นทุน,กำไรอาหารง่าย ๆ ด้วยเครื่องมืออัตโนมัติ ไม่ต้องปวดหัวอีกต่อไป
+                    </p>
+                        <div style="display: flex; justify-content: center;">
+                            <img src="./src/การ์ตูน3.png" width="200" height="200">
+                        </div>
+                    <div>
+                        สวัสดีครับ
+                    </div> <br><br>
+                    
+                <a href="https://lin.ee/rQyviB2" target="_blank"
+
+                    class="bg-transparent border-2 border-[#8aff00] text-[#8aff00] hover:bg-[#8aff00] hover:text-[#0d61b9] 
+                            px-8 py-3 rounded-full font-bold transition duration-300 uppercase tracking-wider text-l">
+                    เป็นเพื่อนกับจุ๊กอู๋ลูกแม่ค้า
+                </a>
+            </div>
+        </section>
+<!-- ==============================================================================
+     ส่วนที่ 1: CSS
+     ให้นำไปวางใน <head>...</head> หรือในแท็ก <style> ของเว็บหลัก
+     (หมายเหตุ: เว็บหลักต้องมี Tailwind CSS อยู่แล้ว)
+============================================================================== -->
+<style>
+    /* Smooth transition for numbers */
+    .number-transition {
+        transition: all 0.5s ease-out;
+    }
+    
+    /* Highlight animation class */
+    .highlight-change {
+        animation: pulse-orange 1s;
+    }
+    @keyframes pulse-orange {
+        0% { background-color: transparent; }
+        50% { background-color: #fff7ed; color: #ea580c; }
+        100% { background-color: transparent; }
+    }
+</style>
+
+<!-- ==============================================================================
+     ส่วนที่ 2: HTML Structure
+     ให้นำไปวางแทรกใน <body> ตรงจุดที่คุณต้องการให้แสดงผล
+============================================================================== -->
+<section class="w-full bg-white py-20 border-b border-gray-200">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Header ของ Section -->
+        <div class="text-center mb-16">
+            <span class="text-[#0d61b9] font-semibold tracking-wider uppercase text-sm">ค้าขายให้มีกำไรต้องคำนวณ Yield</span>
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mt-2">ทำไมต้องคำนวณ Yield?</h2>
+            <p class="text-gray-500 mt-4 max-w-3xl mx-auto">เพราะแท้จริงแล้ว Yield คือต้นทุนแฝงที่พ่อค้าแม่ขายพลาดกันมานักต่อนัก ขายดีจนเจ๊ง คำนี้ไม่เกินจริง!</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 relative">
+            
+            <!-- ฝั่งซ้าย: เนื้อหาที่เลื่อนผ่าน (Scrollable Steps) -->
+            <div class="space-y-[40vh] py-[10vh]"> 
+                
+                <!-- Step 1 -->
+                <div class="step-card opacity-30 transition-opacity duration-500" data-step="1">
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 flex-shrink-0 bg-blue-100 text-[#0d61b9] rounded-full flex items-center justify-center font-bold text-xl">1</div>
+                        <div>
+                            <h3 class="text-xl font-bold text-blue-600 mb-2">เริ่มต้น: จุ๊กอู๋ซื้อกุ้งมา 1 กิโล</h3>
+                            <p class="text-gray-600 leading-relaxed">
+                                กุ้งขาวมา 1 กิโลกรัม (1,000 กรัม) ในราคา <span class="font-bold text-blue-600">300 บาท</span>
+                                ถ้าคิดแบบปกติ ต้นทุนคือ 0.3 บาทต่อกรัม ใช่ไหมครับ?
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="step-card opacity-30 transition-opacity duration-500" data-step="2">
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 flex-shrink-0 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center font-bold text-xl">2</div>
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">ความจริง: Yield หายไปครึ่งนึง!</h3>
+                            <p class="text-gray-600 leading-relaxed">
+                                แต่เดี๋ยวก่อน! จุ๊กอู๋ต้องแกะเปลือก ตัดหัวทิ้ง 
+                                น้ำหนักจริงที่ใช้ได้เหลือแค่ <span class="font-bold text-orange-600">50% (Yield)</span> 
+                                แปลว่าเงิน 300 บาท จุ๊กอู๋ได้เนื้อกุ้งจริงแค่ครึ่งเดียว ต้นทุนจริงจึงพุ่งสูงขึ้นทันที!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="step-card opacity-30 transition-opacity duration-500" data-step="3">
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 flex-shrink-0 bg-green-100 text-green-600 rounded-full flex items-center justify-center font-bold text-xl">3</div>
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">สรุป: รู้ต้นทุนจริง กำไรไม่หาย</h3>
+                            <p class="text-gray-600 leading-relaxed">
+                                ระบบจะคำนวณให้ทันทีว่า ถ้าใช้กุ้ง 100 กรัมในจานนี้ 
+                                ต้นทุนจริงๆ คือ <span class="font-bold text-green-600">60 บาท</span> ไม่ใช่ 30 บาท 
+                                ทำให้คุณตั้งราคาขายได้อย่างถูกต้อง
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ฝั่งขวา: ตารางที่เกาะติดจอ (Sticky Table) -->
+            <div class="hidden md:block"> 
+                <div class="sticky top-32">
+                    <div class="bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden transform transition-all duration-500 hover:scale-105">
+                        <!-- หัวตารางจำลอง -->
+                        <div class="h-2 w-full bg-gradient-to-r from-[#0d61b9] to-[#8aff00]"></div>
+                        <div class="bg-gray-50 px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+                            <span class="font-semibold text-gray-700"><i class="fa-solid fa-calculator mr-2 text-gray-400"></i>ตัวอย่างการคำนวณ</span>
+                        </div>
+
+                        <!-- เนื้อหาตารางจำลอง -->
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-4 pb-4 border-b border-gray-100">
+                                <div class="text-sm text-gray-500">รายการ</div>
+                                <div class="font-bold text-lg text-gray-800">กุ้งขาว (Prawn)</div>
+                            </div>
+
+                            <div class="space-y-4">
+                                <!-- แถวราคาซื้อ -->
+                                <div class="flex justify-between items-center transition-colors duration-300 p-2 rounded" id="mock-row-price">
+                                    <span class="text-gray-600 text-sm">ราคาซื้อ (1 กก.)</span>
+                                    <span class="font-mono font-medium text-gray-800" id="mock-price">0</span>
+                                </div>
+
+                                <!-- แถว Yield -->
+                                <div class="flex justify-between items-center transition-colors duration-300 p-2 rounded" id="mock-row-yield">
+                                    <span class="text-gray-600 text-sm">Yield % (เนื้อที่ใช้ได้)</span>
+                                    <span class="font-bold text-lg transition-colors duration-300" id="mock-yield">100%</span>
+                                </div>
+
+                                <!-- แถวต้นทุนจริง -->
+                                <div class="flex justify-between items-center bg-blue-50 p-3 rounded-lg border border-blue-100 transition-colors duration-300" id="mock-row-truecost">
+                                    <span class="text-blue-800 text-sm font-medium">ต้นทุนจริง / กรัม</span>
+                                    <span class="font-mono font-bold text-blue-700" id="mock-true-cost">0.00</span>
+                                </div>
+
+                                <!-- ส่วนสรุปท้าย -->
+                                <div class="pt-4 mt-2 border-t border-dashed border-gray-200">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <span class="text-gray-500 text-sm">ใช้ในจานนี้</span>
+                                        <span class="text-gray-800 text-sm">100 กรัม</span>
+                                    </div>
+                                    <div class="flex justify-between items-end transition-transform duration-300" id="mock-row-final">
+                                        <span class="font-bold text-gray-800">ต้นทุนรวม</span>
+                                        <span class="text-3xl font-bold text-green-600 tracking-tight" id="mock-final-cost">0.00</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ==============================================================================
+     ส่วนที่ 3: JavaScript
+     ให้นำไปวางไว้ก่อนปิด tag </body> หรือในไฟล์ .js หลัก
+============================================================================== -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // อ้างอิง Element ต่างๆ ในตารางจำลอง
+        const mockPrice = document.getElementById('mock-price');
+        const mockYield = document.getElementById('mock-yield');
+        const mockTrueCost = document.getElementById('mock-true-cost');
+        const mockFinalCost = document.getElementById('mock-final-cost');
+        
+        const rowPrice = document.getElementById('mock-row-price');
+        const rowYield = document.getElementById('mock-row-yield');
+        const rowFinal = document.getElementById('mock-row-final');
+
+        const stepCards = document.querySelectorAll('.step-card');
+
+        // ตั้งค่า Observer ให้ทำงานเมื่อ Element เข้ามาในระยะกลางจอ
+        const observerOptions = {
+            root: null,
+            rootMargin: '-20% 0px -20% 0px', 
+            threshold: 0.5
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const step = entry.target.getAttribute('data-step');
+                    
+                    // ปรับความจาง/เข้ม ของ Step
+                    stepCards.forEach(c => c.classList.replace('opacity-100', 'opacity-30'));
+                    entry.target.classList.replace('opacity-30', 'opacity-100');
+
+                    // สั่งให้ตารางขยับตาม Step
+                    updateMockTable(step);
+                }
+            });
+        }, observerOptions);
+
+        stepCards.forEach(card => observer.observe(card));
+
+        // ฟังก์ชันอัปเดตตารางตามขั้นตอน
+        function updateMockTable(step) {
+            // Reset สไตล์ก่อน
+            rowPrice.classList.remove('bg-yellow-100');
+            rowYield.classList.remove('bg-orange-100');
+            rowFinal.classList.remove('scale-110');
+            mockYield.classList.remove('text-red-600');
+            mockYield.classList.add('text-gray-800');
+
+            if (step === '1') {
+                // Step 1: เพิ่งซื้อมา ยังไม่คิด Yield
+                animateValue(mockPrice, 0, 300, 0); 
+                mockYield.innerText = "100%";
+                animateValue(mockTrueCost, 0, 0.30, 2); 
+                animateValue(mockFinalCost, 0, 30.00, 2); 
+                
+                rowPrice.classList.add('bg-yellow-100'); // ไฮไลท์ราคา
+            } 
+            else if (step === '2') {
+                // Step 2: ใส่ Yield 50%
+                mockPrice.innerText = "300";
+                mockYield.innerText = "50%";
+                mockYield.classList.replace('text-gray-800', 'text-red-600');
+                
+                animateValue(mockTrueCost, 0.30, 0.60, 2); // ราคาต่อกรัมแพงขึ้น
+                animateValue(mockFinalCost, 30.00, 60.00, 2); // ราคารวมแพงขึ้น
+                
+                rowYield.classList.add('bg-orange-100'); // ไฮไลท์ Yield
+            } 
+            else if (step === '3') {
+                // Step 3: สรุปผล
+                mockPrice.innerText = "300";
+                mockYield.innerText = "50%";
+                mockYield.classList.replace('text-gray-800', 'text-red-600');
+                mockTrueCost.innerText = "0.60";
+                mockFinalCost.innerText = "60.00";
+                
+                rowFinal.classList.add('scale-105'); // ขยายตัวเลขสรุป
+            }
+        }
+
+        // ฟังก์ชันวิ่งตัวเลข (Counter Animation)
+        function animateValue(obj, start, end, decimals) {
+            let startTimestamp = null;
+            const duration = 500;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const value = progress * (end - start) + start;
+                obj.innerHTML = value.toFixed(decimals);
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+    });
+</script>
+        <!-- 2.3. Quote / Break Section -->
+        <section class="py-10 bg-[#0d61b9]">
+            <div class="max-w-4x1 mx-auto px-4 text-center">
+                <h2 class="text-2xl md:text-5xl font-bold text-white mb-8 leading-tight">
+                    "พอคำนวณต้นทุนที่แท้จริงได้แล้ว" 
+                    <span class="block mt-4">"คำนวณ กำไรต่อ ได้เลย!"</span>
+                </h2>
+            </div>
+        </section>
+
+    </main>
+    <!-- <div class="w-24 h-1 bg-[#8aff00] mx-auto mb-"></div> เส้นเขียว เก็บไว้ใช้ทีหลัง--> 
+<!-- ========================================== -->
+<!-- 2.4 ส่วนเครื่องมือคำนวณ (แทรกต่อจาก Quote) -->
+<!-- ========================================== -->
+<section id="calculator-tool" class="py-20 bg-gray-50 relative overflow-hidden">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        
+        <!-- หัวข้อเครื่องมือ -->
+        <div class="text-center mb-6">
+            <h2 class="text-5xl font-bold text-[#0d61b9] mb-4">
+                คำนวณเลย
+            </h2>
+            <p class="text-gray-600">
+                กรอกต้นทุนและราคาขายเพื่อดูว่าหัก GP แล้วเหลือเท่าไหร่
+            </p>
+            <div style="display: flex; justify-content: center;">
+                    <img src="./src/การ์ตูน4.png" width="200" height="200">
+            </div>
+        </div>
+
+        <!-- กล่องเครื่องมือ (Card) -->
+        <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+            <!-- แถบสีด้านบน -->
+            <div class="h-2 w-full bg-gradient-to-r from-[#0d61b9] to-[#8aff00]"></div>
+
+            <div class="p-8 md:p-10">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                    
+                    <!-- ฝั่งซ้าย: ฟอร์มกรอกข้อมูล -->
+                    <div class="space-y-6">
+                        <div>
+                            <label for="foodCost" class="block text-sm font-semibold text-gray-700 mb-2">
+                                1. ต้นทุนอาหารต่อจาน (บาท)
+                            </label>
+                            <input type="number" id="foodCost" placeholder="เช่น 45" 
+                                class="w-full px-4 py-3 rounded-xl bg-gray-50 border-2 border-gray-100 focus:border-[#0d61b9] focus:ring-0 outline-none transition-all text-lg">
+                        </div>
+
+                        <div>
+                            <label for="platformFee" class="block text-sm font-semibold text-gray-700 mb-2">
+                                2. ค่า GP (%)
+                            </label>
+                            <input type="number" id="platformFee" value="32.1" 
+                                class="w-full px-4 py-3 rounded-xl bg-gray-50 border-2 border-gray-100 focus:border-[#0d61b9] focus:ring-0 outline-none transition-all text-lg">
+                        </div>
+
+                        <div>
+                            <label for="sellingPrice" class="block text-sm font-semibold text-gray-700 mb-2">
+                                3. ราคาขายหน้าร้าน (บาท)
+                            </label>
+                            <input type="number" id="sellingPrice" placeholder="เช่น 120" 
+                                class="w-full px-4 py-3 rounded-xl bg-gray-50 border-2 border-gray-100 focus:border-[#0d61b9] focus:ring-0 outline-none transition-all text-lg">
+                        </div>
+
+                        <button onclick="calculateProfitClick()" 
+                            class="w-full bg-[#0d61b9] hover:bg-[#8aff00] hover:text-[#0d61b9] text-white font-bold text-lg py-4 rounded-xl shadow-lg hover:shadow-[#8aff00]/50 transition-all duration-300 transform hover:-translate-y-1">
+                            คำนวณกำไรทันที
+                        </button>
+                    </div>
+
+                    <!-- ฝั่งขวา: ผลลัพธ์ -->
+                    <div class="bg-[#f8fafc] rounded-xl p-6 border-2 border-dashed border-gray-200 h-full flex flex-col justify-center items-center text-center">
+                        <div id="resultPlaceholder" class="text-gray-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                            </svg>
+                            <p>กรอกข้อมูลและกดปุ่มคำนวณ<br>เพื่อดูผลลัพธ์ที่นี่</p>
+                        </div>
+
+                        <div id="resultContent" class="hidden w-full">
+                            <p class="text-gray-500 font-medium mb-2">กำไรสุทธิของคุณ</p>
+                            <div class="text-5xl font-black text-[#0d61b9] mb-2 tracking-tight">
+                                <span id="displayProfit">0</span> <span class="text-2xl text-gray-400 font-normal">บาท</span>
+                            </div>
+                            
+                            <!-- แถบสรุปย่อ -->
+                            <div class="mt-6 space-y-2 text-sm border-t border-gray-200 pt-4 w-full">
+                                <div class="flex justify-between text-gray-500">
+                                    <span>โดนหัก GP ไป:</span>
+                                    <span class="font-bold text-red-500">-<span id="displayDeduction">0</span> ฿</span>
+                                </div>
+                                <div class="flex justify-between text-gray-500">
+                                    <span>ต้นทุนอาหาร:</span>
+                                    <span class="font-bold text-gray-700">-<span id="displayCost">0</span> ฿</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========================================== -->
+<!-- ส่วน Script คำนวณ (วางไว้ตรงนี้ หรือ ก่อนปิด Body ก็ได้) -->
+<!-- ========================================== -->
+<script>
+    function calculateProfitClick() {
+        // 1. ดึงค่าจาก Input
+        const costStr = document.getElementById('foodCost').value;
+        const gpStr = document.getElementById('platformFee').value;
+        const priceStr = document.getElementById('sellingPrice').value;
+
+        const cost = parseFloat(costStr);
+        const gp = parseFloat(gpStr);
+        const price = parseFloat(priceStr);
+
+        // 2. ตรวจสอบความถูกต้อง
+        if (isNaN(cost) || isNaN(gp) || isNaN(price)) {
+            alert("กรุณากรอกตัวเลขให้ครบถ้วนนะครับ");
+            return;
+        }
+
+        // 3. คำนวณ
+        // สูตร: ราคาขาย - (ราคาขาย * GP%) - ต้นทุน
+        const gpAmount = price * (gp / 100);
+        const profit = price - gpAmount - cost;
+
+        // 4. แสดงผล
+        const resultPlaceholder = document.getElementById('resultPlaceholder');
+        const resultContent = document.getElementById('resultContent');
+        const displayProfit = document.getElementById('displayProfit');
+        const displayDeduction = document.getElementById('displayDeduction');
+        const displayCost = document.getElementById('displayCost');
+
+        // ซ่อน Placeholder, แสดงผลลัพธ์
+        resultPlaceholder.classList.add('hidden');
+        resultContent.classList.remove('hidden');
+
+        // ใส่ค่าตัวเลข (ทศนิยม 2 ตำแหน่ง)
+        displayProfit.innerText = profit.toFixed(2);
+        displayDeduction.innerText = gpAmount.toFixed(2);
+        displayCost.innerText = cost.toFixed(2);
+
+        // เปลี่ยนสีตัวเลขตามกำไร/ขาดทุน
+        if (profit >= 0) {
+            displayProfit.className = "text-5xl font-black text-[#16a34a] mb-2 tracking-tight"; // สีเขียว
+            displayProfit.innerHTML = "+" + profit.toFixed(2);
+        } else {
+            displayProfit.className = "text-5xl font-black text-[#dc2626] mb-2 tracking-tight"; // สีแดง
+            displayProfit.innerHTML = profit.toFixed(2);
+        }
+    }
+</script>
+<!-- ========================================== -->
+<!-- SIMPLE LINE OA PROMO SECTION               -->
+<!-- (นำไปวางแทรกในส่วน <body> ของหน้าเว็บหลัก)     -->
+<!-- ========================================== -->
+<section class="w-full bg-white py-10 border-t border-gray-100 relative overflow-hidden">
+    
+    <!-- Background Gradient (Subtle) -->
+    <div class="absolute inset-0 bg-gradient-to-b from-white via-blue-50/30 to-white pointer-events-none"></div>
+
+    <div class="max-w-3xl mx-auto px-4 relative z-10 text-center">
+        
+        <!-- Logo/Icon -->
+        <div style="display: flex; justify-content: center;">
+            <img src="./src/การ์ตูน10.png" width="200" height="200">
+        </div>
+
+        <!-- H2 Heading -->
+        <h2 class="text-3xl md:text-3xl font-bold text-gray-900 mb-4 leading-tight">
+            ใช้งานเครื่องมือ <span class="text-[#0d61b9]">คำนวณต้นทุนอาหาร</span><br>
+            ได้ง่ายๆ ที่ LINE จุ๊กอู๋
+        </h2>
+
+        <!-- P Description -->
+        <p class="text-gray-600 text-lg mb-8">
+            เพียงแอดไลน์ก็สามารถเริ่มใช้งานได้ทันที <span class="font-semibold text-[#0d61b9]">ฟรี! ไม่มีค่าใช้จ่าย</span>
+        </p>
+
+        <!-- Button -->
+        <a href="https://lin.ee/k7v0Gou" target="_blank" class="inline-flex items-center justify-center px-10 py-4 text-lg font-semi-bold text-white transition-all duration-300 bg-[#00B900] rounded-full shadow-lg hover:bg-[#009900] hover:shadow-xl hover:-translate-y-1 transform">
+            <i class="fa-brands fa-line text-2xl mr-3"></i> แอดไลน์ใช้งานฟรี
+        </a>
+
+    </div>
+</section>
+</section>
+    <!-- 3. ส่วนท้าย (Footer) -->
+    <footer class="bg-gray-50 pt-1 pb-8 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="border-t border-gray-200 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-400">
+                <p>&copy; 2025 จุ๊กอู๋ลูกแม่ค้า. สงวนลิขสิทธิ์</p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="#" class="hover:text-[#0d61b9]">นโยบายความเป็นส่วนตัว</a>
+                    <a href="#" class="hover:text-[#0d61b9]">เงื่อนไขการใช้งาน</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Script สำหรับ Mobile Menu -->
+    <script>
+        const menuBtn = document.getElementById('menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>
